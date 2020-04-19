@@ -16,6 +16,7 @@ namespace WebApplication3.Controllers
         public HomeController(IEmployeeRepository employeeRepository)
         {
             _employeeRepos = employeeRepository;
+
         }
       
         public ViewResult Index()
