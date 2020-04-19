@@ -18,6 +18,7 @@ namespace WebApplication3.Controllers
             _employeeRepos = employeeRepository;
 
         }
+
       
         public ViewResult Index()
         {
