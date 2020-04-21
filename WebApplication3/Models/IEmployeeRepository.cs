@@ -10,5 +10,7 @@ namespace WebApplication3.Models
         Employee GetEmployee(int Id);
         //to retrieve all employee in a list
         IEnumerable<Employee> GetEmployee();
+        Employee Add(Employee employee);
+        
     }
 }

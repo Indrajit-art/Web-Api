@@ -38,9 +38,23 @@ namespace WebApplication3.Controllers
             return View(homeDetailsViewModel);
         }
 
+        [HttpGet]
         public ViewResult Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Employee employee)
+        {
+            if (ModelState.IsValid)
+            {
+                Employee newemployee = _employeeRepos.Add(employee);
+                return RedirectToAction("details", new { id = newemployee.ID });
+            }
+
+            return View();
+
         }
     }
 }

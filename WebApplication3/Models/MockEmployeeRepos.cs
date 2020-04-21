@@ -18,13 +18,23 @@ namespace WebApplication3.Models
                     new Employee(){ ID=2,Name="Abhi",Department=Dept.PWC,email="efg@gmail.com"}
                 };
         }
+
+        public Employee Add(Employee employee)
+        {
+             employee.ID= _employeeList.Max(e => e.ID) + 1;
+            _employeeList.Add(employee);
+             return employee;
+        }
+
         public Employee GetEmployee(int Id)
         {
-            return _employeeList.FirstOrDefault(e => e.ID == Id);
+            //return _employeeList.FirstOrDefault(e => e.ID == Id);
+            return _employeeList.Where(e => e.ID == Id).FirstOrDefault();
         }
 
         public IEnumerable<Employee> GetEmployee()
         {
+           
             return _employeeList;
         }
     }
