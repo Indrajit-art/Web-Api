@@ -54,7 +54,13 @@ namespace WebApplication3.Controllers
             }
 
             return View();
-
         }
+
+        //[HttpGet]
+        //public IActionResult delete(int Id)
+        //{
+        //    _employeeRepos.delete(Id);
+        //    return RedirectToAction("details");
+        //}
     }
 }

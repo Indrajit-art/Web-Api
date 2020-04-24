@@ -26,6 +26,16 @@ namespace WebApplication3.Models
              return employee;
         }
 
+        public Employee delete(int Id)
+        {
+           Employee employee= _employeeList.FirstOrDefault(e => e.ID == Id);
+            if (employee != null)
+            {
+                _employeeList.Remove(employee);
+            }
+            return employee;
+        }
+
         public Employee GetEmployee(int Id)
         {
             //return _employeeList.FirstOrDefault(e => e.ID == Id);
@@ -36,6 +46,18 @@ namespace WebApplication3.Models
         {
            
             return _employeeList;
+        }
+
+        public Employee update(Employee employeenew)
+        {
+            Employee employee = _employeeList.FirstOrDefault(e => e.ID == employeenew.ID);
+            if (employee != null)
+            {
+                employee.Name = employeenew.Name;
+                employee.email = employeenew.email;
+                employee.Department = employeenew.Department;
+            }
+            return employee;
         }
     }
 }
