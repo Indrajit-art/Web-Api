@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication3.Models;
 
 namespace WebApplication3.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200424055340_seedEmployeestable")]
+    partial class seedEmployeestable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +32,6 @@ namespace WebApplication3.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<string>("PhotoPath");
-
                     b.Property<string>("email")
                         .IsRequired();
 
@@ -41,7 +41,7 @@ namespace WebApplication3.Migrations
 
                     b.HasData(
                         new { ID = 1, Department = 1, Name = "Indra", email = "indra@gmail.com" },
-                        new { ID = 2, Department = 2, Name = "Abhi", email = "Abhi@gmail.com" }
+                        new { ID = 2, Department = 2, Name = "Indra", email = "Abhi@gmail.com" }
                     );
                 });
 #pragma warning restore 612, 618
