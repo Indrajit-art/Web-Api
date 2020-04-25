@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication3.Models;
@@ -12,11 +14,12 @@ namespace WebApplication3.Controllers
     public class HomeController : Controller
     {
         private IEmployeeRepository _employeeRepos;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public HomeController(IEmployeeRepository employeeRepository)
+        public HomeController(IEmployeeRepository employeeRepository,IHostingEnvironment hostingEnvironment)
         {
             _employeeRepos = employeeRepository;
-
+            this.hostingEnvironment = hostingEnvironment;
         }
 
       
@@ -45,11 +48,27 @@ namespace WebApplication3.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Employee newemployee = _employeeRepos.Add(employee);
+                string UniqueFilename = null;
+                if (model.Photo != null)
+                {
+                    string UploadFolder=Path.Combine(hostingEnvironment.WebRootPath, "image");
+                    UniqueFilename= Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+                    string filpath=Path.Combine(UploadFolder, UniqueFilename);
+                    model.Photo.CopyTo(new FileStream(filpath, FileMode.Create));
+                }
+                Employee newemployee = new Employee
+                {
+                    Name = model.Name,
+                    email = model.email,
+                    Department = model.Department,
+                    PhotoPath = UniqueFilename
+                };
+
+                _employeeRepos.Add(newemployee);
                 return RedirectToAction("details", new { id = newemployee.ID });
             }
 
