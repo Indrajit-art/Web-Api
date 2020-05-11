@@ -13,7 +13,7 @@ namespace WebApplication3.ViewModels
         [Required]
         [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$", ErrorMessage = "Invalid Email Address")]
         [Remote(action: "IsEmailInUse",controller:"account")]
-        [ValidEmailDomain(allowDomian:"gmail.com",ErrorMessage ="Email must be gmail.com")]
+        //[ValidEmailDomain(allowDomian:"gmail.com",ErrorMessage ="Email must be gmail.com")]
         public string Email{ get; set; }
 
         [Required]
@@ -25,5 +25,8 @@ namespace WebApplication3.ViewModels
         [Display(Name="Confirm Password")]
         [Compare("Password",ErrorMessage ="Password and Confirm password does not match")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public string City { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace WebApplication3
             services.AddDbContextPool<AppDbContext>(
                 options => options.UseSqlServer(_config.GetConnectionString("EmployeeDbConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options=>
+            services.AddIdentity<CustomIdentitiyUser, IdentityRole>(options=>
             {
                 options.Password.RequiredLength = 3;
                 options.Password.RequireNonAlphanumeric = false;

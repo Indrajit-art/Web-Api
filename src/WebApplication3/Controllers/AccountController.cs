@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication3.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using WebApplication3.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,16 +14,17 @@ namespace WebApplication3.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<CustomIdentitiyUser> userManager;
+        private readonly SignInManager<CustomIdentitiyUser> signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager,SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<CustomIdentitiyUser> userManager,SignInManager<CustomIdentitiyUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
 
 
+        //if Email is already registered
         [AllowAnonymous]
         [AcceptVerbs("GET","POST")]
         public async Task<IActionResult> IsEmailInUse(string email)
@@ -55,10 +57,11 @@ namespace WebApplication3.Controllers
         {
             if(ModelState.IsValid)
             {
-                var user = new IdentityUser
+                var user = new CustomIdentitiyUser
                 {
                     UserName = registerViewModel.Email,
-                    Email = registerViewModel.Email
+                    Email = registerViewModel.Email,
+                    City=registerViewModel.City
                 };
                 var result=await userManager.CreateAsync(user, registerViewModel.Password);
 
