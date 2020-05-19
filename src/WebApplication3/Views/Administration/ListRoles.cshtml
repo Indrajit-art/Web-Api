@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<IdentityRole>
 
-@{ 
+@{
     ViewBag.title = "All Roles";
 }
 
@@ -8,7 +8,25 @@
 
 @if (Model.Any())
 {
+    <div class="form-group">
+        <a class="btn btn-primary" style="width:auto" asp-action="CreateRole" asp-controller="Administration">Create Roles</a>
+    </div>
 
+    foreach (var role in Model)
+    {
+        <div class="card">
+            <div class="card-header">
+                Id: @role.Id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    @role.Name
+                </h5>
+                <a class="btn btn-primary" asp-action="EditRole" asp-controller="Administration" asp-route-id="@role.Id" style="width:auto">Edit</a>
+                <a class="btn btn-danger" style="width:auto">Delete</a>
+            </div>
+        </div>
+    }
 }
 
 else
