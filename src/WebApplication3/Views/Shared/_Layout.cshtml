@@ -24,9 +24,20 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" asp-action="index" asp-controller="home">
-                <img src="~/image/employeeimage.jpg" height="30" width="30" />
-            </a>
+            @if (signInManager.IsSignedIn(User))
+            {
+                <a class="navbar-brand" asp-action="index" asp-controller="home">
+                    <img src="~/image/employeeimage.jpg" height="30" width="30" />
+                </a>
+            }
+
+            else
+            {
+                <a class="navbar-brand" asp-action="login" asp-controller="account">
+                    <img src="~/image/employeeimage.jpg" height="30" width="30" />
+                </a>
+            }
+
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#collapsiblenavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -43,14 +54,14 @@
                     @if (signInManager.IsSignedIn(User))
                     {
 
-                    <li class="nav-item">
-                          <form method="post" asp-action="logout" asp-controller="account">
-                               <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
-                                   logout @User.Identity.Name
-                               </button>
-                           </form>
-                       
-                    </li>
+                        <li class="nav-item">
+                            <form method="post" asp-action="logout" asp-controller="account">
+                                <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
+                                    logout @User.Identity.Name
+                                </button>
+                            </form>
+
+                        </li>
                     }
                     else
                     {

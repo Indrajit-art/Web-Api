@@ -105,5 +105,11 @@ namespace WebApplication3.Controllers
             }
             
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser()
+        {
+            return View();
+        }
     }
 }
