@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using WebApplication3.ViewModels;
 
 namespace WebApplication3.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -181,6 +183,70 @@ namespace WebApplication3.Controllers
             }
 
             return RedirectToAction("EditRole", new { id = roleId });
+        }
+
+        [HttpGet]
+        public IActionResult ListUser()
+        {
+            var User = userManager.Users;
+
+            return View(User);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                ViewBag.message = $"User with id {id} is not found";
+                return View("NotFound");
+            }
+            var userClaims = await userManager.GetClaimsAsync(user);
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            var model = new UpdateUserViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                City = user.City,
+                Claims = userClaims.Select(c => c.Value).ToList(),
+                Roles=userRoles
+               };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(UpdateUserViewModel model)
+        {
+            var user = await userManager.FindByIdAsync(model.Id);
+
+            if(user==null)
+            {
+                ViewBag.message = $"User with the id {model.Id} is not found";
+                return View("NotFound");
+            }
+
+            user.Email = model.Email;
+            user.UserName = model.UserName;
+            user.City = model.City;
+
+            var result = await userManager.UpdateAsync(user);
+
+            if(result.Succeeded)
+            {
+                return RedirectToAction("ListUser");
+            }
+            else
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
         }
     }
 }

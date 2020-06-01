@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CustomIdentitiyUser>
+
+
+@{
+    ViewBag.title = "All Users";
+}
+
+<h1>All Users</h1>
+
+@if (Model.Any())
+{
+    <div class="form-group">
+        <a class="btn btn-primary" style="width:auto" asp-action="Register" asp-controller="account">Create User</a>
+    </div>
+
+    foreach (var user in Model)
+    {
+        <div class="card m-1" >
+            <div class="card-header">
+                Id: @user.Id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    Name: @user.UserName
+                </h5>
+            </div>
+            <div class="card-footer">
+                <a asp-action="UpdateUser" asp-controller="administration" asp-route-id="@user.Id"
+                                                class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-danger" style="width:auto">Delete</a>
+            </div>
+        </div>
+    }
+}
+
+else
+{
+    <div class="card">
+        <div class="card-header">
+            No User to be displayed
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">
+                <a class="btn btn-primary" style="width:auto" asp-action="register" asp-controller="account">Create User</a>
+            </h5>
+        </div>
+    </div>
+}

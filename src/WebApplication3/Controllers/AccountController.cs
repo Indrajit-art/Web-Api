@@ -67,6 +67,10 @@ namespace WebApplication3.Controllers
 
                 if(result.Succeeded)
                 {
+                    if(signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("listuser", "administration");
+                    }
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("index", "home");
                 }
@@ -126,6 +130,13 @@ namespace WebApplication3.Controllers
         {
                 await signInManager.SignOutAsync();
                 return RedirectToAction("login", "account");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
