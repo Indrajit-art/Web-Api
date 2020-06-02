@@ -27,7 +27,9 @@
             <div class="card-footer">
                 <a asp-action="UpdateUser" asp-controller="administration" asp-route-id="@user.Id"
                                                 class="btn btn-primary">Edit</a>
-                <a href="#" class="btn btn-danger" style="width:auto">Delete</a>
+                <a asp-action="DeleteUser" asp-controller="administration" asp-route-id="@user.Id"
+                            class="btn btn-danger" style="width:auto" onclick="return confirm('Are you want to delete the user: @user.UserName')">
+                Delete</a>
             </div>
         </div>
     }

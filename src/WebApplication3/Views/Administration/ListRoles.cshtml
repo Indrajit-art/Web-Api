@@ -23,7 +23,10 @@
                     @role.Name
                 </h5>
                 <a class="btn btn-primary" asp-action="EditRole" asp-controller="Administration" asp-route-id="@role.Id" style="width:auto">Edit</a>
-                <a href="#" class="btn btn-danger" style="width:auto">Delete</a>
+                <a asp-action="DeleteRoles" asp-controller="administration" asp-route-id="@role.Id"
+                   class="btn btn-danger" style="width:auto" onclick="return confirm('Are you want to delete the role: @role.Name')">
+                    Delete
+                </a>
             </div>
         </div>
     }

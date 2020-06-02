@@ -10,13 +10,13 @@ using WebApplication3.ViewModels;
 
 namespace WebApplication3.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<CustomIdentitiyUser> userManager;
 
-        public AdministrationController(RoleManager<IdentityRole> roleManager,UserManager<CustomIdentitiyUser> userManager)
+        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<CustomIdentitiyUser> userManager)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
@@ -31,21 +31,21 @@ namespace WebApplication3.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel createRoleViewModel)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 IdentityRole identityRole = new IdentityRole
                 {
                     Name = createRoleViewModel.Role
                 };
 
-                IdentityResult identityResult=  await roleManager.CreateAsync(identityRole);
+                IdentityResult identityResult = await roleManager.CreateAsync(identityRole);
 
-                if(identityResult.Succeeded)
+                if (identityResult.Succeeded)
                 {
                     return RedirectToAction("ListRoles", "Administration");
                 }
 
-                foreach(IdentityError error in identityResult.Errors)
+                foreach (IdentityError error in identityResult.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
@@ -65,7 +65,7 @@ namespace WebApplication3.Controllers
         [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
-            var result=  await roleManager.FindByIdAsync(id);
+            var result = await roleManager.FindByIdAsync(id);
 
             var model = new EditRolesViewModel
 
@@ -74,9 +74,9 @@ namespace WebApplication3.Controllers
                 RoleId = result.Id
             };
 
-            foreach(var users in userManager.Users)
+            foreach (var users in userManager.Users)
             {
-                if(await userManager.IsInRoleAsync(users, result.Name))
+                if (await userManager.IsInRoleAsync(users, result.Name))
                 {
                     model.Users.Add(users.UserName);
                 }
@@ -91,20 +91,20 @@ namespace WebApplication3.Controllers
 
             Role.Name = editRolesViewModel.RoleName;
 
-            var result=await roleManager.UpdateAsync(Role);
-            
-            if(result.Succeeded)
+            var result = await roleManager.UpdateAsync(Role);
+
+            if (result.Succeeded)
             {
                 return RedirectToAction("ListRoles");
             }
             else
             {
-                foreach(var errors in result.Errors)
+                foreach (var errors in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, errors.Description);
                 }
                 return View(editRolesViewModel);
-            }  
+            }
         }
 
         [HttpGet]
@@ -112,9 +112,9 @@ namespace WebApplication3.Controllers
         {
             ViewBag.roldeId = roleId;
 
-            var role=await roleManager.FindByIdAsync(roleId);
+            var role = await roleManager.FindByIdAsync(roleId);
 
-            if(role==null)
+            if (role == null)
             {
                 ViewBag.message = $"role with id {roleId} is not found";
                 return View("NotFound");
@@ -122,14 +122,14 @@ namespace WebApplication3.Controllers
 
             var model = new List<EditUserViewModel>();
 
-            foreach(var user in userManager.Users)
+            foreach (var user in userManager.Users)
             {
                 var EditUserViewModel = new EditUserViewModel
                 {
-                    UserID=user.Id,
-                    Username=user.UserName
+                    UserID = user.Id,
+                    Username = user.UserName
                 };
-                if(await userManager.IsInRoleAsync(user,role.Name))
+                if (await userManager.IsInRoleAsync(user, role.Name))
                 {
                     EditUserViewModel.IsSelected = true;
                 }
@@ -139,12 +139,12 @@ namespace WebApplication3.Controllers
                 }
                 model.Add(EditUserViewModel);
             }
-           
+
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUser(List<EditUserViewModel> model,string roleId)
+        public async Task<IActionResult> EditUser(List<EditUserViewModel> model, string roleId)
         {
             var role = await roleManager.FindByIdAsync(roleId);
 
@@ -213,8 +213,8 @@ namespace WebApplication3.Controllers
                 Email = user.Email,
                 City = user.City,
                 Claims = userClaims.Select(c => c.Value).ToList(),
-                Roles=userRoles
-               };
+                Roles = userRoles
+            };
 
             return View(model);
         }
@@ -223,7 +223,7 @@ namespace WebApplication3.Controllers
         {
             var user = await userManager.FindByIdAsync(model.Id);
 
-            if(user==null)
+            if (user == null)
             {
                 ViewBag.message = $"User with the id {model.Id} is not found";
                 return View("NotFound");
@@ -235,18 +235,76 @@ namespace WebApplication3.Controllers
 
             var result = await userManager.UpdateAsync(user);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 return RedirectToAction("ListUser");
             }
             else
             {
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
             }
             return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                ViewBag.message = $"User with the id {id} is not found";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListUser");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                return View("ListUser");
+            }
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteRoles(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                ViewBag.message = $"User with the id {id} is not found";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await roleManager.DeleteAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                return View("ListRoles");
+            }
         }
     }
 }
